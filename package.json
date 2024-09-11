@@ -1,0 +1,16 @@
+{
+  "name": "selene_correccion",
+  "version": "1.0.0",
+  "description": "",
+  
+   "scripts": {
+    "start": "parcel src/home.html",
+    "build": "parcel build src/home.html"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "parcel": "^2.12.0"
+  }
+}
