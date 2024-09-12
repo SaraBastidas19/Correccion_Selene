@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function () {
             day.addEventListener('click', function () {
                 const dayNumber = parseInt(this.textContent);
                 if (!isNaN(dayNumber) && monthIndex <= currentMonthIndex) {
-                    if (monthIndex === 8) { // Solo permitir marcar en agosto (mes 7)
+                    if (monthIndex === 8) { // Solo permitir marcar en septiembre (mes 7)
                         if (this.classList.contains('period-day')) {
                             this.classList.remove('period-day');
                             this.innerHTML = `<span>${dayNumber}</span>`;
