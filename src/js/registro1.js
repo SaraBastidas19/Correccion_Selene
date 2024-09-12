@@ -5,6 +5,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const password = document.getElementById('password').value;
         const confirmPassword = document.getElementById('confirm-password').value;
 
+        // Validar que todos los campos estén completos
+        if (!fullName || !username || !password || !confirmPassword) {
+            alert('Por favor, completa todos los campos.');
+            return;
+        }
+
+        // Validar que las contraseñas coincidan
+        if (password !== confirmPassword) {
+            alert('Las contraseñas no coinciden.');
+            return;
+        }
+
         // Obtener usuarios existentes del localStorage
         let users = JSON.parse(localStorage.getItem('users')) || [];
 
@@ -12,17 +24,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const userExists = users.some(user => user.username === username);
         
         if (userExists) {
-            // Mostrar un mensaje de error si el nombre de usuario ya existe
             alert('El nombre de usuario ya está registrado. Por favor, elige otro.');
-            return; // Detener el registro si el usuario ya existe
+            return;
         }
 
         // Si el usuario no existe, continuar con el registro
         const user = {
             fullName,
             username,
-            password,
-            confirmPassword
+            password
         };
 
         // Agregar el nuevo usuario al array de usuarios y guardar en localStorage
@@ -31,6 +41,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Guardar el usuario activo
         localStorage.setItem('activeUser', JSON.stringify(user));
+
+        console.log('Usuarios después de guardar:', JSON.parse(localStorage.getItem('users')));
+        console.log('Usuario activo después de guardar:', JSON.parse(localStorage.getItem('activeUser')));
 
         // Redirigir a la siguiente página de registro
         window.location.href = 'registro2.html';

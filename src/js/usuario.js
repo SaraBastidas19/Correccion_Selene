@@ -6,7 +6,19 @@ document.addEventListener('DOMContentLoaded', function() {
         if (activeUser) {
             // Actualizamos los elementos con la información del usuario
             document.getElementById('displayUsername').textContent = `Nombre de Usuario: ${activeUser.username}`;
-            document.getElementById('displayBirthYear').textContent = `Año de Nacimiento: ${new Date(activeUser.birthdate).getFullYear()}`;
+            
+            // Verificar si hay una fecha de nacimiento válida y mostrar el año de nacimiento
+            if (activeUser.birthdate) {
+                const birthYear = new Date(activeUser.birthdate).getFullYear();
+                if (!isNaN(birthYear)) {
+                    document.getElementById('displayBirthYear').textContent = `Año de Nacimiento: ${birthYear}`;
+                } else {
+                    document.getElementById('displayBirthYear').textContent = "Año de Nacimiento: No disponible";
+                }
+            } else {
+                document.getElementById('displayBirthYear').textContent = "Año de Nacimiento: No disponible";
+            }
+
             document.getElementById('userNameHeader').textContent = activeUser.username; // Encabezado
         } else {
             // Si no hay datos, mostramos valores por defecto

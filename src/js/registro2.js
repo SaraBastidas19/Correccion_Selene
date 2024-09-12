@@ -1,49 +1,77 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Cargamos los datos del usuario desde el localStorage y los mostramos en el formulario
+    // Cargamos los datos del usuario activo desde el localStorage
     const loadRegistro1Data = () => {
-        const users = JSON.parse(localStorage.getItem('users'));
-        if (users && users.length > 0) {
-            const user = users[users.length - 1];
-            document.getElementById('full-name').value = user.fullName;
-            document.getElementById('username').value = user.username;
+        const activeUser = JSON.parse(localStorage.getItem('activeUser'));
+        if (activeUser) {
+            console.log('Usuario activo cargado desde localStorage:', activeUser);
+            const fullNameInput = document.getElementById('full-name');
+            const usernameInput = document.getElementById('username');
+            if (fullNameInput && usernameInput) {
+                fullNameInput.value = activeUser.fullName;
+                usernameInput.value = activeUser.username;
+            } else {
+                console.error('No se encontraron los elementos del DOM con los IDs esperados.');
+            }
+        } else {
+            console.log('No se encontró ningún usuario activo en localStorage.');
         }
     };
 
-    // Guardamos los datos del segundo registro (fecha de nacimiento, ciclo, etc.)
+    // Guardamos los datos del segundo registro
     const saveRegistro2 = () => {
         const birthdate = document.getElementById('birthdate').value;
         const lastCycle = document.getElementById('last-cycle').value;
         const sexualActivity = document.querySelector('input[name="sexual-activity"]:checked').value;
         const recoveryEmail = document.getElementById('recovery-email').value;
 
+        // Validar la fecha de nacimiento
+        const birthdateValue = new Date(birthdate);
+        const today = new Date();
+        if (birthdateValue > today) {
+            alert('La fecha de nacimiento no puede ser en el futuro.');
+            return;
+        }
+
+        // Validar el email
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(recoveryEmail)) {
+            alert('Por favor, ingresa un correo electrónico válido.');
+            return;
+        }
+
+        // Obtener el usuario activo y actualizar sus datos
         let users = JSON.parse(localStorage.getItem('users')) || [];
-        let user = users[users.length - 1];  // Obtenemos el último usuario registrado
+        let activeUser = JSON.parse(localStorage.getItem('activeUser'));
 
-        // Actualizamos los datos del usuario
-        user.birthdate = birthdate;
-        user.lastCycle = lastCycle;
-        user.sexualActivity = sexualActivity;
-        user.recoveryEmail = recoveryEmail;
+        if (activeUser) {
+            activeUser.birthdate = birthdate;
+            activeUser.lastCycle = lastCycle;
+            activeUser.sexualActivity = sexualActivity;
+            activeUser.recoveryEmail = recoveryEmail;
 
-        // Guardamos los cambios en el localStorage
-        users[users.length - 1] = user;
-        localStorage.setItem('users', JSON.stringify(users));
+            // Actualizamos el array de usuarios
+            const userIndex = users.findIndex(user => user.username === activeUser.username);
+            users[userIndex] = activeUser;
 
-        // Actualizamos el usuario activo
-        localStorage.setItem('activeUser', JSON.stringify(user));
+            // Guardar los cambios en localStorage
+            localStorage.setItem('users', JSON.stringify(users));
+            localStorage.setItem('activeUser', JSON.stringify(activeUser));
+        }
+
+        // Mensaje de confirmación y redirigir
+        alert('Usuario registrado correctamente.');
+        window.location.href = 'inicio.html';
     };
 
     const registro2Form = document.getElementById('registro2Form');
     if (registro2Form) {
         registro2Form.addEventListener('submit', (event) => {
-            event.preventDefault();  // Prevenimos la recarga automática de la página
+            event.preventDefault();  // Prevenir la recarga automática
             saveRegistro2();
-            alert('Usuario registrado correctamente.');
-            window.location.href = 'inicio.html';  // Redirigimos al inicio
         });
     }
 
-    // Cargamos los datos del primer registro cuando sea necesario
+    // Cargar los datos del primer registro
     if (document.title === 'Registro 2 - Selene') {
         loadRegistro1Data();
     }
